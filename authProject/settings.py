@@ -95,7 +95,7 @@ WSGI_APPLICATION = 'authProject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
+"""DATABASES = {
     # Se llena con las credenciales de heroku
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -103,6 +103,17 @@ DATABASES = {
         'USER': 'qqhnsxbtfvwgyj',
         'PASSWORD': 'edc5f7ca4783b4f6b0335bb0c55ac161535a835d1af9be496339308ae176e271',
         'HOST': 'ec2-44-195-240-222.compute-1.amazonaws.com',
+        'PORT': '5432',
+    }
+}"""
+DATABASES = {
+    # Se llena con las credenciales de heroku
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'hotel_db', #database
+        'USER': 'postgres',
+        'PASSWORD': '11octubre',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
