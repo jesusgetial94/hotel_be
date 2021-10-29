@@ -3,12 +3,13 @@ from rest_framework                             import  status, generics
 from rest_framework.response                    import Response
 from rest_framework.permissions                 import IsAuthenticated
 from rest_framework_simplejwt.backends          import TokenBackend
-from authApp.models.transactions                import Transactions
-from authApp.serializers.transactionsSerializer import TransactionsSerializer
-from authApp.models.account                     import Account
-class TransactionsAccountView(generics.ListAPIView):
+from authApp.models.reserva                     import Reserva
+from authApp.serializers.reservaSerializer      import ReservaSerializer
+from authApp.models.user                        import User
+from authApp.models.habitacion                  import Habitacion
+class ReservasView(generics.ListAPIView):
     #ListAPIView, para traer mas de un elemento
-    serializer_class  = TransactionsSerializer
+    serializer_class  = ReservaSerializer
     permissions_classes = (IsAuthenticated,)
     def get_queryset(self):
         #print('Request: ', self.request)
@@ -20,13 +21,13 @@ class TransactionsAccountView(generics.ListAPIView):
         if valid_data['user_id'] != self.kwargs['user']:
             stringResponse = {'detail' : 'Unauthorized Request'}
             return Response(stringResponse, status=status.HTTP_401_UNAUTHORIZED)
-        queryset = Transactions.objects.filter(account_origin_id = self.kwargs['account'])
+        queryset = Reserva.objects.all()
         return queryset
-class  TransactionsDetailView(generics.RetrieveAPIView):
+class  ReservaDetailView(generics.RetrieveAPIView):
     #RetrieveAPIView para ver el detalle de solo una
-    serializer_class    = TransactionsSerializer
+    serializer_class    = ReservaSerializer
     permissions_classes = (IsAuthenticated,)
-    queryset            =  Transactions.objects.all()
+    queryset            =  Reserva.objects.all()
     
     def get(self, request, *args, **kwargs):
         print('Request: ', request)
@@ -40,8 +41,8 @@ class  TransactionsDetailView(generics.RetrieveAPIView):
             return Response(stringResponse, status=status.HTTP_401_UNAUTHORIZED)
         return super().get(request, *args, **kwargs)
 
-class TransactionCreateView(generics.CreateAPIView):
-    serializer_class    = TransactionsSerializer
+class ReservaCreateView(generics.CreateAPIView):
+    serializer_class    = ReservaSerializer
     permissions_classes = (IsAuthenticated,)
     def post(self, request, *args, **kwargs):
         print('Request: ', request)
@@ -53,31 +54,28 @@ class TransactionCreateView(generics.CreateAPIView):
         if valid_data['user_id'] != request.data['user_id']:
             stringResponse = {'detail' : 'Unauthorized Request'}
             return Response(stringResponse, status=status.HTTP_401_UNAUTHORIZED)
-        serializer = TransactionsSerializer(data=request.data['transaction_data'])
+        serializer = ReservaSerializer(data=request.data['reserva_data'])
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response("Transaccion Exitosa", status=status.HTTP_201_CREATED)
+        return Response("Reservación Exitosa", status=status.HTTP_201_CREATED)
 
-class TransactionUpdateView(generics.UpdateAPIView):
-    serializer_class    = TransactionsSerializer
+class ReservaUpdateView(generics.UpdateAPIView):
+    serializer_class    = ReservaSerializer
     permissions_classes = (IsAuthenticated,)
-    queryset            = Transactions.objects.all()
+    queryset            = Reserva.objects.all()
     def get(self, request, *args, **kwargs):
-        print('Request: ', request)
-        print('Args: ', args)
-        print('KWArgs: ', kwargs)
         token        = request.META.get('HTTP_AUTHORIZATION')[7:]
         tokenBackend = TokenBackend(algorithm=settings.SIMPLE_JWT['ALGORITHM'])
         valid_data   = tokenBackend.decode(token,verify=False)
         if valid_data['user_id'] != kwargs['user']:
             stringResponse = {'detail' : 'Unauthorized Request'}
             return Response(stringResponse, status=status.HTTP_401_UNAUTHORIZED)
-        return super().update(request, *args, **kwargs)
+        return super().partial_update(request, *args, **kwargs)
 
-class TransactionDelateView(generics.DestroyAPIView):
-    serializer_class    = TransactionsSerializer
+class ReservaDelateView(generics.DestroyAPIView):
+    serializer_class    = ReservaSerializer
     permissions_classes = (IsAuthenticated,)
-    queryset            = Transactions.objects.all()
+    queryset            = Reserva.objects.all()
     def get(self, request, *args, **kwargs):
         print('Request: ', request)
         print('Args: ', args)

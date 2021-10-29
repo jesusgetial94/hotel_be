@@ -1,3 +1,3 @@
-from .accountSerializer import AccountSerializer
-from .userSerializer import UserSerializer
-from .transactionsSerializer import TransactionsSerializer
+from .userSerializer            import UserSerializer
+from .habitacionSerializer      import HabitacionSerializer
+from .reservaSerializer         import ReservaSerializer

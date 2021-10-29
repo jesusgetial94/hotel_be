@@ -1,3 +1,3 @@
-from .userCreateView import UserCreateView
-from .userDetailView import UserDetailView
-from .transactionsView import TransactionCreateView, TransactionsAccountView, TransactionsDetailView, TransactionDelateView, TransactionUpdateView
+from .userView          import UserCreateView, UserDetailView, UserCreateSuperView
+from .habitacionView    import HabitacionCreateView, HabitacionesView, HabitacionDelateView, HabitacionDetailView, HabitacionUpdateView
+from .reservaView       import ReservaCreateView, ReservasView, ReservaDetailView, ReservaUpdateView, ReservaDelateView
