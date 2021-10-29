@@ -48,7 +48,10 @@ class ReservaCreateView(generics.CreateAPIView):
         print('Request: ', request)
         print('Args: ', args)
         print('KWArgs: ', kwargs)
-        token        = request.META.get('HTTP_AUTHORIZATION')[7:]
+        try:
+            token        = request.META.get('HTTP_AUTHORIZATION')[7:]
+        except:
+            return Response("Token requerido", status=status.HTTP_401_UNAUTHORIZED)
         tokenBackend = TokenBackend(algorithm=settings.SIMPLE_JWT['ALGORITHM'])
         valid_data   = tokenBackend.decode(token,verify=False)
         if valid_data['user_id'] != request.data['user_id']:
@@ -83,7 +86,7 @@ class ReservaDelateView(generics.DestroyAPIView):
         token        = request.META.get('HTTP_AUTHORIZATION')[7:]
         tokenBackend = TokenBackend(algorithm=settings.SIMPLE_JWT['ALGORITHM'])
         valid_data   = tokenBackend.decode(token,verify=False)
-        if valid_data['user_id'] != kwargs['user']:
+        if not (User.objects.get(id=valid_data['user_id']).is_superuser) and valid_data['user_id'] != kwargs['user'] :
             stringResponse = {'detail' : 'Unauthorized Request'}
             return Response(stringResponse, status=status.HTTP_401_UNAUTHORIZED)
         return super().destroy(request, *args, **kwargs)

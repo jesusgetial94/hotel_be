@@ -13,14 +13,14 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path
+from django.contrib                 import admin
+from django.urls                    import path
 from rest_framework_simplejwt.views import (TokenObtainPairView, TokenRefreshView)
-from authApp import views
+from authApp                        import views
 
 urlpatterns = [
     path('admin/',                                  admin.site.urls),
-    path('login/',                                  TokenObtainPairView.as_view()),
+    path('login/', TokenObtainPairView.as_view()),
     path('refresh/',                                TokenRefreshView.as_view()),
     path('user/',                                   views.UserCreateView.as_view()),
     path('user/superuser/',                         views.UserCreateSuperView.as_view()),
@@ -30,10 +30,10 @@ urlpatterns = [
     path('habitacion/<int:user>/',                  views.HabitacionesView.as_view()),
     path('habitacion/remove/<int:user>/<int:pk>/',  views.HabitacionDelateView.as_view()),
     path('habitacion/update/<int:user>/<int:pk>/',  views.HabitacionUpdateView.as_view()),
-    path('reserva/create/',                         views.HabitacionCreateView.as_view()),
-    path('reserva/detail/<int:user>/<int:pk>/',     views.HabitacionDetailView.as_view()),
-    path('reserva/detail/<int:user>/',              views.HabitacionesView.as_view()),
-    path('reserva/remove/<int:user>/<int:pk>/',     views.HabitacionDelateView.as_view()),
-    path('reserva/update/<int:user>/<int:pk>/',     views.HabitacionUpdateView.as_view()),
+    path('reserva/create/',                         views.ReservaCreateView.as_view()),
+    path('reserva/detail/<int:user>/<int:pk>/',     views.ReservaDetailView.as_view()),
+    path('reserva/detail/<int:user>/',              views.ReservasView.as_view()),
+    path('reserva/remove/<int:user>/<int:pk>/',     views.ReservaDelateView.as_view()),
+    path('reserva/update/<int:user>/<int:pk>/',     views.ReservaUpdateView.as_view()),
 
 ]

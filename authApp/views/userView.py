@@ -10,6 +10,7 @@ from rest_framework.permissions             import IsAuthenticated
 from authApp.models.user                    import User
 from authApp.serializers.userSerializer     import UserSerializer
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+#from django.contrib.auth.base_user import BaseUserManager
 
 class UserCreateView(views.APIView):
     def post(self, request, *args, **kwargs):
@@ -25,19 +26,20 @@ class UserCreateView(views.APIView):
 
 class UserCreateSuperView(views.APIView, BaseUserManager):
     def post(self, request, *args, **kwargs):
-        serializer = UserSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
         try:
             users = User.objects.get(is_superuser=True)
+            print(users)
         except:
-            user = serializer.save()
+            serializer = UserSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
             tokenData = {"username":request.data['username'],
                         "password":request.data['password']}
             tokenSerializer = TokenObtainPairSerializer(data=tokenData)
             tokenSerializer.is_valid(raise_exception=True)
             user = User.objects.get(username = request.data['username'])
-            user.is_admin = True
-            user.save()
+            user.is_superuser = True
+            user.save(update_fields=['is_superuser'])
             return Response(tokenSerializer.validated_data, status=status.HTTP_201_CREATED)
         return Response("Ya hay un super usuario registrado", status=status.HTTP_401_UNAUTHORIZED)
 
