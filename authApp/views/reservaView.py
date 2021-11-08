@@ -1,5 +1,6 @@
 from django.conf                                import settings
-from rest_framework                             import  status, generics
+from django.db.models.query import QuerySet
+from rest_framework                             import status, generics
 from rest_framework.response                    import Response
 from rest_framework.permissions                 import IsAuthenticated
 from rest_framework_simplejwt.backends          import TokenBackend
@@ -7,22 +8,24 @@ from authApp.models.reserva                     import Reserva
 from authApp.serializers.reservaSerializer      import ReservaSerializer
 from authApp.models.user                        import User
 from authApp.models.habitacion                  import Habitacion
+from rest_framework.exceptions                  import NotAuthenticated
 class ReservasView(generics.ListAPIView):
-    #ListAPIView, para traer mas de un elemento
     serializer_class  = ReservaSerializer
-    permissions_classes = (IsAuthenticated,)
     def get_queryset(self):
-        #print('Request: ', self.request)
-        #print('Args: ', self.args)
-        #print('KWArgs: ', self.kwargs)
-        token        = self.request.META.get('HTTP_AUTHORIZATION')[7:]
-        tokenBackend = TokenBackend(algorithm=settings.SIMPLE_JWT['ALGORITHM'])
-        valid_data   = tokenBackend.decode(token,verify=False)
-        if valid_data['user_id'] != self.kwargs['user']:
-            stringResponse = {'detail' : 'Unauthorized Request'}
-            return Response(stringResponse, status=status.HTTP_401_UNAUTHORIZED)
-        queryset = Reserva.objects.all()
-        return queryset
+        try:
+            token        = self.request.META.get('HTTP_AUTHORIZATION')[7:]
+            tokenBackend = TokenBackend(algorithm=settings.SIMPLE_JWT['ALGORITHM'])
+            valid_data   = tokenBackend.decode(token,verify=False)
+            print("id de usuario: ", valid_data['user_id'])
+        except:
+            raise NotAuthenticated("Se requiere autentificacion")
+        user = User.objects.get(id=valid_data['user_id'])
+        if user.is_superuser:
+            queryset = Reserva.objects.all()
+            return queryset
+        else:
+            queryset = Reserva.objects.filter(reserva_usuario_id = valid_data['user_id'])
+            return queryset
 class  ReservaDetailView(generics.RetrieveAPIView):
     #RetrieveAPIView para ver el detalle de solo una
     serializer_class    = ReservaSerializer
@@ -54,10 +57,11 @@ class ReservaCreateView(generics.CreateAPIView):
             return Response("Token requerido", status=status.HTTP_401_UNAUTHORIZED)
         tokenBackend = TokenBackend(algorithm=settings.SIMPLE_JWT['ALGORITHM'])
         valid_data   = tokenBackend.decode(token,verify=False)
-        if valid_data['user_id'] != request.data['user_id']:
+        if valid_data['user_id'] != request.data['reserva_usuario']:
             stringResponse = {'detail' : 'Unauthorized Request'}
             return Response(stringResponse, status=status.HTTP_401_UNAUTHORIZED)
-        serializer = ReservaSerializer(data=request.data['reserva_data'])
+        print(request.data)
+        serializer = ReservaSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response("Reservación Exitosa", status=status.HTTP_201_CREATED)

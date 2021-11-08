@@ -4,7 +4,7 @@ from rest_framework.response                    import Response
 from rest_framework.permissions                 import IsAuthenticated
 from rest_framework_simplejwt.backends          import TokenBackend
 from authApp.models.habitacion                  import Habitacion
-from authApp.models.user import User
+from authApp.models.user                        import User
 from authApp.serializers.habitacionSerializer   import HabitacionSerializer
 
 class HabitacionesView(generics.ListAPIView):

@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-#atrtm@i-n#2#a9mxxu4k916yl_%97!^_oa3860-1txgp-h0g2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS           = []
+ALLOWED_HOSTS           = ['ec2-34-226-18-183.compute-1.amazonaws.com', 'localhost']
 CORS_ALLOW_ALL_ORIGINS  = True
 
 
@@ -99,17 +99,18 @@ WSGI_APPLICATION = 'authProject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-"""DATABASES = {
+DATABASES = {
     # Se llena con las credenciales de heroku
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'd4ontmppkqk8d5', #database
-        'USER': 'qqhnsxbtfvwgyj',
-        'PASSWORD': 'edc5f7ca4783b4f6b0335bb0c55ac161535a835d1af9be496339308ae176e271',
-        'HOST': 'ec2-44-195-240-222.compute-1.amazonaws.com',
+        'NAME': 'd561t9ti81fjt7', #database
+        'USER': 'mqsqzdawrmndhx',
+        'PASSWORD': 'cf60ab81b934a2457852e5eace46732c53718e9e1445657bef01c6faf56a631b',
+        'HOST': 'ec2-34-226-18-183.compute-1.amazonaws.com',
         'PORT': '5432',
     }
-}"""
+}
+"""
 DATABASES = {
     # Se llena con las credenciales locales
     'default': {
@@ -120,7 +121,7 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': '5432',
     }
-}
+}"""
 
 
 # Password validation
