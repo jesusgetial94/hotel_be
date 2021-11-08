@@ -1,5 +1,15 @@
 # Ignorar carpeta de entorno virtual
+__pycache__/
+#*.py[cod]
+#*$py.class
+/env/
 env/
+.env
+#.env
+#venv/
+#ENV/
+#env.bak/
+#venv.bak/
 
 # Logs
 logs
